@@ -38,7 +38,6 @@ class piratebot(botlib.Bot):
         todo = [line.strip() for line in open('todo.txt')]
 
     def write_todo(self, todo_list):
-        print 'test'
         try:
             todo_file = open('todo.txt', 'w')
             for todo_item in todo_list:
@@ -73,7 +72,8 @@ class piratebot(botlib.Bot):
         elif botlib.check_on_own(self.data, ">join"):
             username = self.get_username()
             channel = self.get_channel()
-            new_channel = self.get_args();
+            hostname = self.get_hostname().split("@")[0]
+            new_channel = self.get_args()
             is_commitee_member = 0
 
             # Check user is on the committee
@@ -121,7 +121,7 @@ class piratebot(botlib.Bot):
 
             if newItem:
                 todo.append(' '.join(newItem[0:]))
-                if write_todo(todo):
+                if self.write_todo(todo):
                     self.protocol.privmsg(channel, "Added!")
             else:
                 self.protocol.privmsg(channel, "Tell me what to add!")
@@ -133,7 +133,7 @@ class piratebot(botlib.Bot):
 
             if removeItem:
                 todo.pop(removeItem)
-                if write_todo(todo):
+                if self.write_todo(todo):
                     self.protocol.privmsg(channel, "Removed!")
             else:
                 self.protocol.privmsg(channel, "Tell me what to remove")
@@ -152,7 +152,7 @@ class piratebot(botlib.Bot):
                         self.protocol.privmsg(channel, "That is an invalid entry.")
                     else:
                         todo.pop(number-1)
-                        if write_todo(todo):
+                        if self.write_todo(todo):
                             self.protocol.privmsg(channel, "Removed!")
                 except ValueError:
                     self.protocol.privmsg(channel, "That's not a number!")
@@ -176,7 +176,7 @@ class piratebot(botlib.Bot):
         # >memberadd command
         elif botlib.check_on_own(self.data, ">memberadd"):
             username = self.get_username()
-            hostname = self.get_hostname().partition("@")[0]
+            hostname = self.get_hostname().split("@")[0]
             channel = self.get_channel()
             is_commitee_member = 0
 
